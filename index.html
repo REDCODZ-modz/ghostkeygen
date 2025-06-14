@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC GHOST Keygen Terminal v4.8</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Fira Code', monospace; background-color: #000; color: #00ff41; }
+        #matrix-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.3; }
+        .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%); background-size: 100% 4px; animation: scan 7.5s linear infinite; }
+        @keyframes scan { 0% { background-position: 0 0; } 100% { background-position: 0 100vh; } }
+        .container-wrapper { position: relative; z-index: 1; padding: 1rem; width: 100%; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .glitch { font-weight: 700; position: relative; text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41; }
+        .glitch:before, .glitch:after { content: 'RC GHOST KEYGEN'; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
+        .glitch:before { left: 2px; text-shadow: -2px 0 #ff00c1; animation: glitch-anim-1 2.5s infinite linear reverse; }
+        .glitch:after { left: -2px; text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1; animation: glitch-anim-2 2s infinite linear reverse; }
+        @keyframes glitch-anim-1 { 0%, 100% { clip-path: inset(45% 0 50% 0); } 25% { clip-path: inset(0 0 0 0); } 50% { clip-path: inset(80% 0 15% 0); } 75% { clip-path: inset(50% 0 45% 0); } }
+        @keyframes glitch-anim-2 { 0%, 100% { clip-path: inset(10% 0 85% 0); } 25% { clip-path: inset(60% 0 30% 0); } 50% { clip-path: inset(30% 0 60% 0); } 75% { clip-path: inset(0 0 0 0); } }
+        .terminal-card { background: rgba(0, 20, 0, 0.75); border: 1px solid #00ff41; box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); backdrop-filter: blur(5px); }
+        .terminal-input { background: #000; border: 1px solid #00ff41; caret-color: #00ff41; box-shadow: inset 0 0 5px rgba(0, 255, 65, 0.3); color: #00ff41; }
+        .terminal-input::placeholder { color: #00ff41; opacity: 0.6; }
+        .terminal-button { border: 1px solid #00ff41; text-shadow: 0 0 3px #00ff41; box-shadow: 0 0 7px rgba(0, 255, 65, 0.3); transition: all 0.2s; }
+        .terminal-button:hover { background: #00ff41; color: #000; text-shadow: none; box-shadow: 0 0 15px rgba(0, 255, 65, 0.7); }
+        .tab-btn { background: transparent; padding: 0.75rem 1rem; color: #00ff41; width: 100%; text-align: center; }
+        .tab-btn.active { background: #00ff41; color: #000; text-shadow: none; }
+        .tab-content { display: none; padding-top: 1rem; border-top: 1px solid #00ff41;}
+        .tab-content.active { display: block; }
+        .duration-btn.active { background: #00ff41; color: #000; text-shadow: none; }
+        .key-card { border: 1px solid #00ff41; background: #000; opacity: 0; transform: translateY(20px); animation: fadeIn 0.5s forwards; }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        .copy-btn.copied { background-color: #00ff41; color: #000; border-color: #00ff41; text-shadow: none; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; display: none; align-items: center; justify-content: center; }
+        .modal-content { background: rgba(0, 20, 0, 0.9); border: 1px solid #00ff41; padding: 1.5rem; border-radius: 0.5rem; width: 90%; max-width: 400px; box-shadow: 0 0 25px rgba(0, 255, 65, 0.3); }
+        .action-btn { font-size: 0.7rem; padding: 2px 6px; }
+        .banned-btn { border-color: #ff4141; color: #ff4141; }
+        .banned-btn:hover { background: #ff4141; color: #000; }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    <div class="scanline"></div>
+
+    <div class="container-wrapper">
+        <div class="w-full max-w-4xl terminal-card rounded-lg p-6 flex flex-col">
+            <div class="flex-grow">
+                <div class="flex justify-center text-center mb-2"> <h1 class="glitch text-3xl md:text-4xl">RC GHOST KEYGEN</h1> </div>
+                <p class="text-center text-xs text-green-400 mb-2">[RC GHOST KEYGEN v4.8.0]</p>
+                <div id="datetime-container" class="text-center text-xs text-cyan-400 mb-4 font-mono"></div>
+
+                <div class="grid grid-cols-2 mb-4">
+                    <button id="tabBtnStandard" class="tab-btn border-t border-l border-r border-green-500 rounded-tl-lg" onclick="showTab('standard')">STANDARD</button>
+                    <button id="tabBtnPremium" class="tab-btn border-t border-r border-green-500 rounded-tr-lg" onclick="showTab('premium')">PREMIUM</button>
+                    <button id="tabBtnPremiumList" class="tab-btn border-t border-b border-l border-r border-green-500 rounded-bl-lg" onclick="showTab('premiumList')">PREMIUM LIST</button>
+                    <button id="tabBtnUnban" class="tab-btn border-t border-b border-r border-green-500 rounded-br-lg" onclick="showTab('unban')">UNBAN</button>
+                </div>
+
+                <div id="tabStandard" class="tab-content">
+                    <p class="text-center text-sm text-green-300 mb-4">:: Generate daily keys ::</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" id="std_secret" value="L1MB0O" class="terminal-input w-full rounded-md p-2" placeholder=":: SECRET_KEY">
+                        <input type="text" id="std_prefix" value="RC_GH-" class="terminal-input w-full rounded-md p-2" placeholder=":: PREFIX">
+                        <input type="number" id="std_days" value="5" class="terminal-input w-full rounded-md p-2 md:col-span-2" placeholder=":: DAYS_TO_GENERATE">
+                    </div>
+                    <div class="text-center"> <button onclick="generateStandardKeys()" class="terminal-button py-2 px-6 rounded-md font-bold"> [ GENERATE STANDARD ] </button> </div>
+                     <div id="result-container-std" class="mt-6 space-y-2 h-56 overflow-y-auto pr-2"></div>
+                </div>
+
+                <div id="tabPremium" class="tab-content">
+                    <p class="text-center text-sm text-green-300 mb-4">:: Generate a single key with obfuscated expiry date ::</p>
+                    <div class="space-y-4 mb-4">
+                         <input type="text" id="prem_secret" value="L1MB0O" class="terminal-input w-full rounded-md p-2" placeholder=":: SECRET_KEY">
+                         <div>
+                             <p class="text-center text-xs text-green-300 mb-2">:: SELECT EXPIRY DURATION ::</p>
+                             <div class="flex justify-center gap-2 md:gap-4">
+                                <button id="d3" class="duration-btn terminal-button py-2 px-4 rounded-md text-sm" onclick="setDuration(3)">3 DAYS</button>
+                                <button id="d7" class="duration-btn terminal-button py-2 px-4 rounded-md text-sm" onclick="setDuration(7)">7 DAYS</button>
+                                <button id="d30" class="duration-btn terminal-button py-2 px-4 rounded-md text-sm" onclick="setDuration(30)">30 DAYS</button>
+                             </div>
+                         </div>
+                    </div>
+                    <div class="text-center"> <button onclick="generatePremiumKey()" class="terminal-button py-2 px-6 rounded-md font-bold"> [ GENERATE PREMIUM ] </button> </div>
+                    <div id="result-container-prem" class="mt-6 space-y-2 h-56 overflow-y-auto pr-2"></div>
+                </div>
+
+                <div id="tabPremiumList" class="tab-content">
+                     <p class="text-center text-sm text-green-300 mb-4">:: Daftar Key Aktif (Admin View) ::</p>
+                     <input type="text" id="search-key-input" class="terminal-input w-full rounded-md p-2 mb-4" placeholder=":: Search key..." onkeyup="displayActiveKeys(this.value)">
+                     <div id="active-keys-container" class="space-y-2 h-80 overflow-y-uuui pr-2"></div>
+                </div>
+                
+                <div id="tabUnban" class="tab-content">
+                    <p class="text-center text-sm text-green-300 mb-4">:: Aktifkan kembali key dengan durasi baru ::</p>
+                    <div class="spac="terminal-input w-full rounded-md p-2" placeholder=":: Masukkan Key yang akan di-unban ::">
+                        <input type="number" id="unban-duration" class="terminal-input w-full rounded-md p-2" placeholder=":: Masukkan durasi baru (hari) ::">
+                    </div>
+                    <div class="text-center">
+                        <button onclick="unbanKey()" class="terminal-button py-2 px-6 rounded-md font-bold"> [ UNBAN KEY ] </button>
+                    </div>
+                    <div id="result-container-unban" class="mt-6 space-y-2 h-56 overflow-y-auto pr-2"></div>
+                </div>
+            </div>
+             <footer class="text-center text-xs text-gray-500 pt-6 mt-4 border-t border-gray-700">
+                &copy; 2024 RC GHOST. All Rights Reserved.
+            </footer>
+        </div>
+    </div>
+
+    <div id="duration-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-lg text-center mb-4">Tambah Durasi Key</h3>
+            <p id="modal-key-display" class="text-center text-yellow-300 text-sm mb-4 break-all"></p>
+            <input type="number" id="days-to-add" class="terminal-input w-full p-2 rounded-md mb-4" placeholder=":: Masukkan jumlah hari ::">
+            <div class="flex justify-center gap-4">
+                <button onclick="hideAddDurationModal()" class="terminal-button banned-btn py-2 px-4 rounded-md">BATAL</button>
+                <button onclick="confirmAddDuration()" class="terminal-button py-2 px-4 rounded-md">KONFIRMASI</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('matrix-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight; const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; const fontSize = 16; const columns = canvas.width / fontSize; const rainDrops = Array(Math.floor(columns)).fill(1); const drawMatrix = () => { ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#00ff41'; ctx.font = fontSize + 'px monospace'; rainDrops.forEach((y, ind) => { const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length)); ctx.fillText(text, ind * fontSize, y * fontSize); if (y * fontSize > canvas.height && Math.random() > 0.975) { rainDrops[ind] = 0; } rainDrops[ind]++; }); }; setInterval(drawMatrix, 33);
+        
+        let selectedDuration = 3;
+        let keyToModify = null;
+
+        function updateDateTime() {
+            const now = new Date();
+            const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('id-ID', optionsDate);
+            const timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('datetime-container').textContent = `${dateString} | ${timeString}`;
+        }
+
+        function showTab(tabName) {
+            ['standard', 'premium', 'premiumList', 'unban'].forEach(id => {
+                 const capitalizedId = id.charAt(0).toUpperCase() + id.slice(1);
+                 document.getElementById(`tab${capitalizedId}`).classList.remove('active');
+                 document.getElementById(`tabBtn${capitalizedId}`).classList.remove('active');
+            });
+            
+            const capitalizedTabName = tabName.charAt(0).toUpperCase() + tabName.slice(1);
+            document.getElementById(`tab${capitalizedTabName}`).classList.add('active');
+            document.getElementById(`tabBtn${capitalizedTabName}`).classList.add('active');
+
+            if (tabName === 'premiumList') {
+                displayActiveKeys();
+            } else if (tabName === 'standard') {
+                 generateStandardKeys();
+            }
+        }
+
+        function setDuration(days){
+            selectedDuration = days;
+            [3, 7, 30].forEach(d => document.getElementById(`d${d}`).classList.remove('active'));
+            document.getElementById(`d${days}`).classList.add('active');
+        }
+
+        async function typeWriter(element, text) { for (let i = 0; i < text.length; i++) { element.textContent += text.charAt(i); await new Promise(resolve => setTimeout(resolve, 25)); } }
+        
+        function copyToClipboard(text, button) { const tempInput = document.createElement("textarea"); tempInput.value = text; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput); button.textContent = '[ COPIED ]'; button.classList.add('copied'); setTimeout(() => { button.textContent = '[ COPY ]'; button.classList.remove('copied'); }, 2000); }
+
+        function getSecretValue(secret) {
+            if (!secret) return 0;
+            let value = 0;
+            for (let i = 0; i < secret.length; i++) { value += secret.charCodeAt(i); }
+            return value;
+        }
+
+        function createResultCard(container) {
+            const card = document.createElement('div');
+            card.className = 'key-card p-2 rounded-md flex items-center justify-between';
+            const keyInfo = document.createElement('div');
+            const dateEl = document.createElement('p');
+            dateEl.className = 'text-xs text-green-300';
+            const keyEl = document.createElement('p');
+            keyEl.className = 'text-base';
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'terminal-button text-xs py-1 px-2 rounded-md copy-btn';
+            copyBtn.textContent = '[ COPY ]';
+            keyInfo.appendChild(dateEl);
+            keyInfo.appendChild(keyEl);
+            card.appendChild(keyInfo);
+            card.appendChild(copyBtn);
+            container.appendChild(card);
+            return { card, dateEl, keyEl, copyBtn };
+        }
+        
+        async function generateStandardKeys() {
+            const secret = document.getElementById('std_secret').value;
+            const prefix = document.getElementById('std_prefix').value;
+            const days = parseInt(document.getElementById('std_days').value);
+            const resultContainer = document.getElementById('result-container-std');
+            resultContainer.innerHTML = '';
+            if (!secret) { resultContainer.innerHTML = `<p class="text-red-500">>> ERROR: SECRET_KEY is null.</p>`; return; }
+            const secretValue = getSecretValue(secret);
+            const today = new Date();
+            for (let i = 0; i < days; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                const dateSeed = parseInt(`${year}${month}${day}`);
+                const encryptedKeyNumber = ((dateSeed * 997) + secretValue) % 89999999 + 10000000;
+                const finalKey = `${prefix}${encryptedKeyNumber}`;
+                const formattedDate = date.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+                const { card, dateEl, keyEl, copyBtn } = createResultCard(resultContainer);
+                card.style.animationDelay = `${i * 0.1}s`;
+                dateEl.textContent = `// ${formattedDate}`;
+                copyBtn.onclick = () => copyToClipboard(finalKey, copyBtn);
+                await typeWriter(keyEl, finalKey);
+            }
+        }
+
+        async function generatePremiumKey() {
+            const secret = document.getElementById('prem_secret').value;
+            const prefix = 'RC-GHPREM-';
+            const resultContainer = document.getElementById('result-container-prem');
+            resultContainer.innerHTML = '';
+            if (!secret) {
+                resultContainer.innerHTML = `<p class="text-red-500">>> ERROR: SECRET_KEY is null.</p>`;
+                return;
+            }
+            const secretValue = getSecretValue(secret);
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + selectedDuration);
+            const day = String(expiryDate.getDate()).padStart(2, '0');
+            const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
+            const year = expiryDate.getFullYear();
+            const expirySeedString = `${year}${month}${day}`;
+            const mask = (secretValue * 137) % 9000 + 1000;
+            const obfuscatedDate = parseInt(expirySeedString) + mask;
+            const finalKey = `${prefix}${obfuscatedDate}${mask}`;
+            const formattedExpiry = expiryDate.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+            const { dateEl, keyEl, copyBtn } = createResultCard(resultContainer);
+            dateEl.innerHTML = `// Expires on: ${formattedExpiry}`;
+            copyBtn.onclick = () => copyToClipboard(finalKey, copyBtn);
+            await typeWriter(keyEl, finalKey);
+            const newKeyData = { key: finalKey, expiry: expiryDate.toISOString() };
+            const storedKeys = JSON.parse(localStorage.getItem('premiumKeys')) || [];
+            storedKeys.push(newKeyData);
+            localStorage.setItem('premiumKeys', JSON.stringify(storedKeys));
+        }
+
+        function displayActiveKeys(searchTerm = '') {
+            const container = document.getElementById('active-keys-container');
+            container.innerHTML = '';
+            const storedKeys = JSON.parse(localStorage.getItem('premiumKeys')) || [];
+            const now = new Date();
+            const stillActiveKeys = storedKeys.filter(k => new Date(k.expiry) > now);
+            localStorage.setItem('premiumKeys', JSON.stringify(stillActiveKeys));
+            const filteredKeys = stillActiveKeys.filter(keyData => keyData.key.toUpperCase().includes(searchTerm.toUpperCase()));
+            if (filteredKeys.length === 0) {
+                 container.innerHTML = `<p class="text-center text-gray-400">>> Tidak ada key aktif yang cocok.</p>`;
+                 return;
+            }
+            filteredKeys.forEach((keyData, index) => {
+                const expiryDate = new Date(keyData.expiry);
+                const diff = expiryDate.getTime() - now.getTime();
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                let remainingStr = `${days}h ${hours}j ${minutes}m`;
+                const card = document.createElement('div');
+                card.className = 'key-card p-2 rounded-md flex items-center justify-between text-sm';
+                card.style.animationDelay = `${index * 0.1}s`;
+                const keyInfo = document.createElement('div');
+                const keyEl = document.createElement('p');
+                keyEl.className = 'text-base text-yellow-300 font-mono';
+                keyEl.textContent = keyData.key;
+                const expiryEl = document.createElement('p');
+                expiryEl.className = 'text-xs text-green-300 font-mono';
+                expiryEl.textContent = `Sisa: ${remainingStr.trim()}`;
+                keyInfo.appendChild(keyEl);
+                keyInfo.appendChild(expiryEl);
+                const actions = document.createElement('div');
+                actions.className = 'flex gap-2';
+                const addButton = document.createElement('button');
+                addButton.className = 'terminal-button action-btn rounded-md';
+                addButton.textContent = '+DURASI';
+                addButton.onclick = () => showAddDurationModal(keyData.key);
+                const banButton = document.createElement('button');
+                banButton.className = 'terminal-button banned-btn action-btn rounded-md';
+                banButton.textContent = 'BANNED';
+                banButton.onclick = () => banKey(keyData.key);
+                actions.appendChild(addButton);
+                actions.appendChild(banButton);
+                card.appendChild(keyInfo);
+                card.appendChild(actions);
+                container.appendChild(card);
+            });
+        }
+
+        function banKey(keyString) {
+            let storedKeys = JSON.parse(localStorage.getItem('premiumKeys')) || [];
+            const updatedKeys = storedKeys.filter(k => k.key !== keyString);
+            localStorage.setItem('premiumKeys', JSON.stringify(updatedKeys));
+            displayActiveKeys(document.getElementById('search-key-input').value);
+        }
+
+        function showAddDurationModal(keyString) {
+            keyToModify = keyString;
+            document.getElementById('modal-key-display').textContent = keyString;
+            document.getElementById('duration-modal').style.display = 'flex';
+        }
+
+        function hideAddDurationModal() {
+            document.getElementById('duration-modal').style.display = 'none';
+            document.getElementById('days-to-add').value = '';
+            keyToModify = null;
+        }
+
+        function confirmAddDuration() {
+            const daysToAdd = parseInt(document.getElementById('days-to-add').value);
+            if (!keyToModify || isNaN(daysToAdd) || daysToAdd <= 0) return;
+            let storedKeys = JSON.parse(localStorage.getItem('premiumKeys')) || [];
+            const keyIndex = storedKeys.findIndex(k => k.key === keyToModify);
+            if (keyIndex > -1) {
+                const currentExpiry = new Date(storedKeys[keyIndex].expiry);
+                currentExpiry.setDate(currentExpiry.getDate() + daysToAdd);
+                storedKeys[keyIndex].expiry = currentExpiry.toISOString();
+                localStorage.setItem('premiumKeys', JSON.stringify(storedKeys));
+            }
+            hideAddDurationModal();
+            displayActiveKeys(document.getElementById('search-key-input').value);
+        }
+
+        function unbanKey() {
+            const keyToUnban = document.getElementById('unban-key').value;
+            const daysToAdd = parseInt(document.getElementById('unban-duration').value);
+            const resultContainer = document.getElementById('result-container-unban');
+            resultContainer.innerHTML = '';
+
+            if (!keyToUnban.trim() || !daysToAdd || daysToAdd <= 0) {
+                resultContainer.innerHTML = `<p class="text-red-500">>> ERROR: Key atau durasi tidak valid.</p>`;
+                return;
+            }
+
+            let storedKeys = JSON.parse(localStorage.getItem('premiumKeys')) || [];
+            const existingKeyIndex = storedKeys.findIndex(k => k.key === keyToUnban);
+            if (existingKeyIndex > -1) {
+                resultContainer.innerHTML = `<p class="text-yellow-400">>> WARNING: Key sudah aktif. Gunakan fitur '+DURASI' di Premium List.</p>`;
+                return;
+            }
+            
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + daysToAdd);
+            const newKeyData = { key: keyToUnban, expiry: expiryDate.toISOString() };
+            storedKeys.push(newKeyData);
+            localStorage.setItem('premiumKeys', JSON.stringify(storedKeys));
+
+            const formattedExpiry = expiryDate.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+            resultContainer.innerHTML = `<p class="text-green-300">>> SUCCESS: Key berhasil di-unban dan ditambahkan ke Premium List.</p>
+                                       <p class="text-cyan-400 font-mono mt-2 break-all">${keyToUnban}</p>
+                                       <p class="text-xs text-green-300">// Aktif sampai: ${formattedExpiry}</p>`;
+            document.getElementById('unban-key').value = '';
+            document.getElementById('unban-duration').value = '';
+            
+            setTimeout(() => showTab('premiumList'), 1500);
+        }
+
+        window.onload = () => { 
+            showTab('standard');
+            setDuration(3);
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        };
+    </script>
+</body>
+</html>
+
