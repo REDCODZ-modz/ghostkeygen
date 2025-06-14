@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RC GHOST Keygen Terminal v4.8</title>
+    <title>RC GHOST Keygen Terminal v5.0 (Firebase)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Styling tidak berubah dari file asli Anda, hanya fungsionalitas yang ditingkatkan */
         body { font-family: 'Fira Code', monospace; background-color: #000; color: #00ff41; }
         #matrix-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.3; }
         .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%); background-size: 100% 4px; animation: scan 7.5s linear infinite; }
@@ -24,7 +25,8 @@
         .terminal-input { background: #000; border: 1px solid #00ff41; caret-color: #00ff41; box-shadow: inset 0 0 5px rgba(0, 255, 65, 0.3); color: #00ff41; }
         .terminal-input::placeholder { color: #00ff41; opacity: 0.6; }
         .terminal-button { border: 1px solid #00ff41; text-shadow: 0 0 3px #00ff41; box-shadow: 0 0 7px rgba(0, 255, 65, 0.3); transition: all 0.2s; }
-        .terminal-button:hover { background: #00ff41; color: #000; text-shadow: none; box-shadow: 0 0 15px rgba(0, 255, 65, 0.7); }
+        .terminal-button:hover:not(:disabled) { background: #00ff41; color: #000; text-shadow: none; box-shadow: 0 0 15px rgba(0, 255, 65, 0.7); }
+        .terminal-button:disabled { cursor: not-allowed; opacity: 0.5; }
         .tab-btn { background: transparent; padding: 0.75rem 1rem; color: #00ff41; width: 100%; text-align: center; }
         .tab-btn.active { background: #00ff41; color: #000; text-shadow: none; }
         .tab-content { display: none; padding-top: 1rem; border-top: 1px solid #00ff41;}
@@ -48,7 +50,7 @@
         <div class="w-full max-w-4xl terminal-card rounded-lg p-6 flex flex-col">
             <div class="flex-grow">
                 <div class="flex justify-center text-center mb-2"> <h1 class="glitch text-3xl md:text-4xl">RC GHOST KEYGEN</h1> </div>
-                <p class="text-center text-xs text-green-400 mb-2">[RC GHOST KEYGEN v4.8.0]</p>
+                <p class="text-center text-xs text-green-400 mb-2">[RC GHOST KEYGEN v5.0.0 Firebase Edition]</p>
                 <div id="datetime-container" class="text-center text-xs text-cyan-400 mb-4 font-mono"></div>
 
                 <div class="grid grid-cols-2 mb-4">
@@ -57,7 +59,8 @@
                     <button id="tabBtnPremiumList" class="tab-btn border-t border-b border-l border-r border-green-500 rounded-bl-lg" onclick="showTab('premiumList')">PREMIUM LIST</button>
                     <button id="tabBtnUnban" class="tab-btn border-t border-b border-r border-green-500 rounded-br-lg" onclick="showTab('unban')">UNBAN</button>
                 </div>
-
+                
+                <!-- Tab Content tidak berubah -->
                 <div id="tabStandard" class="tab-content">
                     <p class="text-center text-sm text-green-300 mb-4">:: Generate daily keys ::</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -66,7 +69,7 @@
                         <input type="number" id="std_days" value="5" class="terminal-input w-full rounded-md p-2 md:col-span-2" placeholder=":: DAYS_TO_GENERATE">
                     </div>
                     <div class="text-center"> <button onclick="generateStandardKeys()" class="terminal-button py-2 px-6 rounded-md font-bold"> [ GENERATE STANDARD ] </button> </div>
-                     <div id="result-container-std" class="mt-6 space-y-2 h-56 overflow-y-auto pr-2"></div>
+                    <div id="result-container-std" class="mt-6 space-y-2 h-56 overflow-y-auto pr-2"></div>
                 </div>
 
                 <div id="tabPremium" class="tab-content">
@@ -82,23 +85,24 @@
                              </div>
                          </div>
                     </div>
-                    <div class="text-center"> <button onclick="generatePremiumKey()" class="terminal-button py-2 px-6 rounded-md font-bold"> [ GENERATE PREMIUM ] </button> </div>
+                    <div class="text-center"> <button id="generate-prem-btn" onclick="generatePremiumKey()" class="terminal-button py-2 px-6 rounded-md font-bold"> [ GENERATE PREMIUM ] </button> </div>
                     <div id="result-container-prem" class="mt-6 space-y-2 h-56 overflow-y-auto pr-2"></div>
                 </div>
-
+                
                 <div id="tabPremiumList" class="tab-content">
-                     <p class="text-center text-sm text-green-300 mb-4">:: Daftar Key Aktif (Admin View) ::</p>
-                     <input type="text" id="search-key-input" class="terminal-input w-full rounded-md p-2 mb-4" placeholder=":: Search key..." onkeyup="displayActiveKeys(this.value)">
-                     <div id="active-keys-container" class="space-y-2 h-80 overflow-y-uuui pr-2"></div>
+                     <p class="text-center text-sm text-green-300 mb-4">:: Daftar Key Aktif (Realtime via Firebase) ::</p>
+                     <input type="text" id="search-key-input" class="terminal-input w-full rounded-md p-2 mb-4" placeholder=":: Search key..." onkeyup="displayActiveKeys()">
+                     <div id="active-keys-container" class="space-y-2 h-80 overflow-y-auto pr-2"></div>
                 </div>
                 
                 <div id="tabUnban" class="tab-content">
                     <p class="text-center text-sm text-green-300 mb-4">:: Aktifkan kembali key dengan durasi baru ::</p>
-                    <div class="spac="terminal-input w-full rounded-md p-2" placeholder=":: Masukkan Key yang akan di-unban ::">
+                    <div class="space-y-4 mb-4">
+                        <input type="text" id="unban-key" class="terminal-input w-full rounded-md p-2" placeholder=":: Masukkan Key yang akan di-unban ::">
                         <input type="number" id="unban-duration" class="terminal-input w-full rounded-md p-2" placeholder=":: Masukkan durasi baru (hari) ::">
                     </div>
                     <div class="text-center">
-                        <button onclick="unbanKey()" class="terminal-button py-2 px-6 rounded-md font-bold"> [ UNBAN KEY ] </button>
+                        <button id="unban-btn" onclick="unbanKey()" class="terminal-button py-2 px-6 rounded-md font-bold"> [ UNBAN KEY ] </button>
                     </div>
                     <div id="result-container-unban" class="mt-6 space-y-2 h-56 overflow-y-auto pr-2"></div>
                 </div>
@@ -109,6 +113,7 @@
         </div>
     </div>
 
+    <!-- Modal tidak berubah -->
     <div id="duration-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 class="text-lg text-center mb-4">Tambah Durasi Key</h3>
@@ -116,18 +121,46 @@
             <input type="number" id="days-to-add" class="terminal-input w-full p-2 rounded-md mb-4" placeholder=":: Masukkan jumlah hari ::">
             <div class="flex justify-center gap-4">
                 <button onclick="hideAddDurationModal()" class="terminal-button banned-btn py-2 px-4 rounded-md">BATAL</button>
-                <button onclick="confirmAddDuration()" class="terminal-button py-2 px-4 rounded-md">KONFIRMASI</button>
+                <button id="confirm-duration-btn" onclick="confirmAddDuration()" class="terminal-button py-2 px-4 rounded-md">KONFIRMASI</button>
             </div>
         </div>
     </div>
 
-    <script>
+    <!-- ===== START: FIREBASE INTEGRATION SCRIPT ===== -->
+    <script type="module">
+        // 1. Import fungsi yang diperlukan dari Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, getDocs, query, where, Timestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+        // 2. Konfigurasi Firebase Anda dari file config.txt
+        const firebaseConfig = {
+          apiKey: "AIzaSyDCZrt54NfMZkTzpsX-ZJBhA2Qh9a4ATQU",
+          authDomain: "keycodm-add11.firebaseapp.com",
+          databaseURL: "https://keycodm-add11-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "keycodm-add11",
+          storageBucket: "keycodm-add11.appspot.com", // Perbaikan: .appspot.com
+          messagingSenderId: "203989625230",
+          appId: "1:203989625230:web:7fd9631e5fa9d02e76dcdf",
+          measurementId: "G-6PDW8Z787R"
+        };
+
+        // 3. Inisialisasi Firebase dan Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const keysCollection = collection(db, 'premiumKeys');
+        
+        // =========================================================================
+        // SCRIPT ASLI ANDA (DENGAN MODIFIKASI UNTUK FIREBASE)
+        // =========================================================================
+
         const canvas = document.getElementById('matrix-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight; const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; const fontSize = 16; const columns = canvas.width / fontSize; const rainDrops = Array(Math.floor(columns)).fill(1); const drawMatrix = () => { ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#00ff41'; ctx.font = fontSize + 'px monospace'; rainDrops.forEach((y, ind) => { const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length)); ctx.fillText(text, ind * fontSize, y * fontSize); if (y * fontSize > canvas.height && Math.random() > 0.975) { rainDrops[ind] = 0; } rainDrops[ind]++; }); }; setInterval(drawMatrix, 33);
         
         let selectedDuration = 3;
-        let keyToModify = null;
+        let keyToModify = { id: null, key: null }; // Simpan ID dan Key
+        let allActiveKeys = []; // Cache lokal untuk daftar kunci
 
-        function updateDateTime() {
+        // Fungsi UI (tidak berubah)
+        window.updateDateTime = function() {
             const now = new Date();
             const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const dateString = now.toLocaleDateString('id-ID', optionsDate);
@@ -135,7 +168,7 @@
             document.getElementById('datetime-container').textContent = `${dateString} | ${timeString}`;
         }
 
-        function showTab(tabName) {
+        window.showTab = function(tabName) {
             ['standard', 'premium', 'premiumList', 'unban'].forEach(id => {
                  const capitalizedId = id.charAt(0).toUpperCase() + id.slice(1);
                  document.getElementById(`tab${capitalizedId}`).classList.remove('active');
@@ -153,7 +186,7 @@
             }
         }
 
-        function setDuration(days){
+        window.setDuration = function(days){
             selectedDuration = days;
             [3, 7, 30].forEach(d => document.getElementById(`d${d}`).classList.remove('active'));
             document.getElementById(`d${days}`).classList.add('active');
@@ -161,7 +194,7 @@
 
         async function typeWriter(element, text) { for (let i = 0; i < text.length; i++) { element.textContent += text.charAt(i); await new Promise(resolve => setTimeout(resolve, 25)); } }
         
-        function copyToClipboard(text, button) { const tempInput = document.createElement("textarea"); tempInput.value = text; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput); button.textContent = '[ COPIED ]'; button.classList.add('copied'); setTimeout(() => { button.textContent = '[ COPY ]'; button.classList.remove('copied'); }, 2000); }
+        window.copyToClipboard = function(text, button) { const tempInput = document.createElement("textarea"); tempInput.value = text; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput); button.textContent = '[ COPIED ]'; button.classList.add('copied'); setTimeout(() => { button.textContent = '[ COPY ]'; button.classList.remove('copied'); }, 2000); }
 
         function getSecretValue(secret) {
             if (!secret) return 0;
@@ -189,7 +222,8 @@
             return { card, dateEl, keyEl, copyBtn };
         }
         
-        async function generateStandardKeys() {
+        // Fungsi Standard Key tidak perlu interaksi database, jadi tidak berubah
+        window.generateStandardKeys = async function() {
             const secret = document.getElementById('std_secret').value;
             const prefix = document.getElementById('std_prefix').value;
             const days = parseInt(document.getElementById('std_days').value);
@@ -216,15 +250,25 @@
             }
         }
 
-        async function generatePremiumKey() {
+        // --- MODIFIKASI FIREBASE START ---
+
+        window.generatePremiumKey = async function() {
+            const button = document.getElementById('generate-prem-btn');
+            button.disabled = true;
+            button.textContent = '[ GENERATING... ]';
+
             const secret = document.getElementById('prem_secret').value;
             const prefix = 'RC-GHPREM-';
             const resultContainer = document.getElementById('result-container-prem');
             resultContainer.innerHTML = '';
+
             if (!secret) {
                 resultContainer.innerHTML = `<p class="text-red-500">>> ERROR: SECRET_KEY is null.</p>`;
+                button.disabled = false;
+                button.textContent = '[ GENERATE PREMIUM ]';
                 return;
             }
+
             const secretValue = getSecretValue(secret);
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + selectedDuration);
@@ -235,58 +279,88 @@
             const mask = (secretValue * 137) % 9000 + 1000;
             const obfuscatedDate = parseInt(expirySeedString) + mask;
             const finalKey = `${prefix}${obfuscatedDate}${mask}`;
-            const formattedExpiry = expiryDate.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
-            const { dateEl, keyEl, copyBtn } = createResultCard(resultContainer);
-            dateEl.innerHTML = `// Expires on: ${formattedExpiry}`;
-            copyBtn.onclick = () => copyToClipboard(finalKey, copyBtn);
-            await typeWriter(keyEl, finalKey);
-            const newKeyData = { key: finalKey, expiry: expiryDate.toISOString() };
-            const storedKeys = JSON.parse(localStorage.getItem('premiumKeys')) || [];
-            storedKeys.push(newKeyData);
-            localStorage.setItem('premiumKeys', JSON.stringify(storedKeys));
-        }
 
-        function displayActiveKeys(searchTerm = '') {
+            try {
+                // Simpan ke Firestore
+                const newKeyData = { 
+                    key: finalKey, 
+                    expiry: Timestamp.fromDate(expiryDate), // Gunakan Timestamp Firebase
+                    createdAt: Timestamp.now()
+                };
+                await addDoc(keysCollection, newKeyData);
+                
+                // Tampilkan hasil
+                const formattedExpiry = expiryDate.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+                const { dateEl, keyEl, copyBtn } = createResultCard(resultContainer);
+                dateEl.innerHTML = `// Expires on: ${formattedExpiry}`;
+                copyBtn.onclick = () => copyToClipboard(finalKey, copyBtn);
+                await typeWriter(keyEl, finalKey);
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                resultContainer.innerHTML = `<p class="text-red-500">>> FIREBASE ERROR: ${error.message}</p>`;
+            } finally {
+                button.disabled = false;
+                button.textContent = '[ GENERATE PREMIUM ]';
+            }
+        }
+        
+        window.displayActiveKeys = function() {
+            const searchTerm = document.getElementById('search-key-input').value.toUpperCase();
             const container = document.getElementById('active-keys-container');
             container.innerHTML = '';
-            const storedKeys = JSON.parse(localStorage.getItem('premiumKeys')) || [];
-            const now = new Date();
-            const stillActiveKeys = storedKeys.filter(k => new Date(k.expiry) > now);
-            localStorage.setItem('premiumKeys', JSON.stringify(stillActiveKeys));
-            const filteredKeys = stillActiveKeys.filter(keyData => keyData.key.toUpperCase().includes(searchTerm.toUpperCase()));
+            
+            // Filter dari cache lokal
+            const filteredKeys = allActiveKeys.filter(keyData => keyData.key.toUpperCase().includes(searchTerm));
+
             if (filteredKeys.length === 0) {
                  container.innerHTML = `<p class="text-center text-gray-400">>> Tidak ada key aktif yang cocok.</p>`;
                  return;
             }
+
+            const now = new Date();
+            filteredKeys.sort((a, b) => b.expiry.toDate() - a.expiry.toDate()); // Urutkan dari terbaru
+            
             filteredKeys.forEach((keyData, index) => {
-                const expiryDate = new Date(keyData.expiry);
+                const expiryDate = keyData.expiry.toDate(); // Konversi Timestamp ke Date
                 const diff = expiryDate.getTime() - now.getTime();
+                
+                if (diff < 0) return; // Seharusnya sudah difilter oleh snapshot listener, tapi sebagai pengaman
+
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 let remainingStr = `${days}h ${hours}j ${minutes}m`;
+                
                 const card = document.createElement('div');
                 card.className = 'key-card p-2 rounded-md flex items-center justify-between text-sm';
                 card.style.animationDelay = `${index * 0.1}s`;
+                
                 const keyInfo = document.createElement('div');
                 const keyEl = document.createElement('p');
                 keyEl.className = 'text-base text-yellow-300 font-mono';
                 keyEl.textContent = keyData.key;
+                
                 const expiryEl = document.createElement('p');
                 expiryEl.className = 'text-xs text-green-300 font-mono';
                 expiryEl.textContent = `Sisa: ${remainingStr.trim()}`;
+                
                 keyInfo.appendChild(keyEl);
                 keyInfo.appendChild(expiryEl);
+                
                 const actions = document.createElement('div');
                 actions.className = 'flex gap-2';
+                
                 const addButton = document.createElement('button');
                 addButton.className = 'terminal-button action-btn rounded-md';
                 addButton.textContent = '+DURASI';
-                addButton.onclick = () => showAddDurationModal(keyData.key);
+                addButton.onclick = () => showAddDurationModal(keyData.id, keyData.key);
+                
                 const banButton = document.createElement('button');
                 banButton.className = 'terminal-button banned-btn action-btn rounded-md';
                 banButton.textContent = 'BANNED';
-                banButton.onclick = () => banKey(keyData.key);
+                banButton.onclick = () => banKey(keyData.id);
+                
                 actions.appendChild(addButton);
                 actions.appendChild(banButton);
                 card.appendChild(keyInfo);
@@ -295,41 +369,69 @@
             });
         }
 
-        function banKey(keyString) {
-            let storedKeys = JSON.parse(localStorage.getItem('premiumKeys')) || [];
-            const updatedKeys = storedKeys.filter(k => k.key !== keyString);
-            localStorage.setItem('premiumKeys', JSON.stringify(updatedKeys));
-            displayActiveKeys(document.getElementById('search-key-input').value);
+        window.banKey = async function(docId) {
+            if (confirm(`Apakah Anda yakin ingin menghapus key ini secara permanen?`)) {
+                try {
+                    const keyDocRef = doc(db, 'premiumKeys', docId);
+                    await deleteDoc(keyDocRef);
+                    // UI akan update otomatis karena onSnapshot
+                } catch (error) {
+                    console.error("Error deleting document: ", error);
+                    alert("Gagal menghapus key: " + error.message);
+                }
+            }
         }
 
-        function showAddDurationModal(keyString) {
-            keyToModify = keyString;
+        window.showAddDurationModal = function(docId, keyString) {
+            keyToModify = { id: docId, key: keyString };
             document.getElementById('modal-key-display').textContent = keyString;
             document.getElementById('duration-modal').style.display = 'flex';
         }
 
-        function hideAddDurationModal() {
+        window.hideAddDurationModal = function() {
             document.getElementById('duration-modal').style.display = 'none';
             document.getElementById('days-to-add').value = '';
-            keyToModify = null;
+            keyToModify = { id: null, key: null };
         }
 
-        function confirmAddDuration() {
+        window.confirmAddDuration = async function() {
+            const button = document.getElementById('confirm-duration-btn');
+            button.disabled = true;
+
             const daysToAdd = parseInt(document.getElementById('days-to-add').value);
-            if (!keyToModify || isNaN(daysToAdd) || daysToAdd <= 0) return;
-            let storedKeys = JSON.parse(localStorage.getItem('premiumKeys')) || [];
-            const keyIndex = storedKeys.findIndex(k => k.key === keyToModify);
-            if (keyIndex > -1) {
-                const currentExpiry = new Date(storedKeys[keyIndex].expiry);
-                currentExpiry.setDate(currentExpiry.getDate() + daysToAdd);
-                storedKeys[keyIndex].expiry = currentExpiry.toISOString();
-                localStorage.setItem('premiumKeys', JSON.stringify(storedKeys));
+            if (!keyToModify.id || isNaN(daysToAdd) || daysToAdd <= 0) {
+                 button.disabled = false;
+                 return;
             }
-            hideAddDurationModal();
-            displayActiveKeys(document.getElementById('search-key-input').value);
+
+            try {
+                // Cari dokumen yang sesuai di cache lokal untuk mendapatkan tanggal expiry saat ini
+                const keyData = allActiveKeys.find(k => k.id === keyToModify.id);
+                if (keyData) {
+                    const currentExpiry = keyData.expiry.toDate();
+                    currentExpiry.setDate(currentExpiry.getDate() + daysToAdd);
+                    
+                    const keyDocRef = doc(db, 'premiumKeys', keyToModify.id);
+                    await updateDoc(keyDocRef, {
+                        expiry: Timestamp.fromDate(currentExpiry)
+                    });
+                    hideAddDurationModal();
+                } else {
+                    throw new Error("Key not found in local cache.");
+                }
+            } catch (error) {
+                 console.error("Error updating duration: ", error);
+                 alert("Gagal menambah durasi: " + error.message);
+            } finally {
+                button.disabled = false;
+            }
         }
 
-        function unbanKey() {
+        window.unbanKey = async function() {
+            const button = document.getElementById('unban-btn');
+            button.disabled = true;
+            button.textContent = "[ PROCESSING... ]";
+            
             const keyToUnban = document.getElementById('unban-key').value;
             const daysToAdd = parseInt(document.getElementById('unban-duration').value);
             const resultContainer = document.getElementById('result-container-unban');
@@ -337,37 +439,78 @@
 
             if (!keyToUnban.trim() || !daysToAdd || daysToAdd <= 0) {
                 resultContainer.innerHTML = `<p class="text-red-500">>> ERROR: Key atau durasi tidak valid.</p>`;
+                button.disabled = false;
+                button.textContent = "[ UNBAN KEY ]";
                 return;
             }
 
-            let storedKeys = JSON.parse(localStorage.getItem('premiumKeys')) || [];
-            const existingKeyIndex = storedKeys.findIndex(k => k.key === keyToUnban);
-            if (existingKeyIndex > -1) {
-                resultContainer.innerHTML = `<p class="text-yellow-400">>> WARNING: Key sudah aktif. Gunakan fitur '+DURASI' di Premium List.</p>`;
-                return;
-            }
-            
-            const expiryDate = new Date();
-            expiryDate.setDate(expiryDate.getDate() + daysToAdd);
-            const newKeyData = { key: keyToUnban, expiry: expiryDate.toISOString() };
-            storedKeys.push(newKeyData);
-            localStorage.setItem('premiumKeys', JSON.stringify(storedKeys));
+            try {
+                // Cek apakah key sudah ada dan aktif
+                const q = query(keysCollection, where("key", "==", keyToUnban));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                     const activeDoc = querySnapshot.docs[0].data();
+                     if (activeDoc.expiry.toDate() > new Date()) {
+                        resultContainer.innerHTML = `<p class="text-yellow-400">>> WARNING: Key sudah aktif. Gunakan fitur '+DURASI' di Premium List.</p>`;
+                        return;
+                     }
+                }
+                
+                // Jika tidak ada atau sudah expired, buat baru
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + daysToAdd);
+                const newKeyData = { 
+                    key: keyToUnban, 
+                    expiry: Timestamp.fromDate(expiryDate),
+                    createdAt: Timestamp.now()
+                };
+                await addDoc(keysCollection, newKeyData);
 
-            const formattedExpiry = expiryDate.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
-            resultContainer.innerHTML = `<p class="text-green-300">>> SUCCESS: Key berhasil di-unban dan ditambahkan ke Premium List.</p>
-                                       <p class="text-cyan-400 font-mono mt-2 break-all">${keyToUnban}</p>
-                                       <p class="text-xs text-green-300">// Aktif sampai: ${formattedExpiry}</p>`;
-            document.getElementById('unban-key').value = '';
-            document.getElementById('unban-duration').value = '';
-            
-            setTimeout(() => showTab('premiumList'), 1500);
+                const formattedExpiry = expiryDate.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+                resultContainer.innerHTML = `<p class="text-green-300">>> SUCCESS: Key berhasil ditambahkan/di-unban.</p>
+                                           <p class="text-cyan-400 font-mono mt-2 break-all">${keyToUnban}</p>
+                                           <p class="text-xs text-green-300">// Aktif sampai: ${formattedExpiry}</p>`;
+                document.getElementById('unban-key').value = '';
+                document.getElementById('unban-duration').value = '';
+                
+                setTimeout(() => showTab('premiumList'), 1500);
+
+            } catch (error) {
+                console.error("Error during unban: ", error);
+                resultContainer.innerHTML = `<p class="text-red-500">>> FIREBASE ERROR: ${error.message}</p>`;
+            } finally {
+                 button.disabled = false;
+                 button.textContent = "[ UNBAN KEY ]";
+            }
         }
+
+        // Realtime listener
+        function listenForActiveKeys() {
+            const q = query(keysCollection, where("expiry", ">", Timestamp.now()));
+            onSnapshot(q, (querySnapshot) => {
+                allActiveKeys = [];
+                querySnapshot.forEach((doc) => {
+                    allActiveKeys.push({ id: doc.id, ...doc.data() });
+                });
+                console.log("Updated active keys from Firebase:", allActiveKeys.length);
+                // Jika tab list sedang aktif, perbarui tampilannya
+                if (document.getElementById('tabPremiumList').classList.contains('active')) {
+                    displayActiveKeys();
+                }
+            }, (error) => {
+                console.error("Firebase listener error:", error);
+                const container = document.getElementById('active-keys-container');
+                container.innerHTML = `<p class="text-red-500 text-center">>> Gagal terhubung ke Firebase. Periksa koneksi dan konfigurasi.</p>`;
+            });
+        }
+
 
         window.onload = () => { 
             showTab('standard');
             setDuration(3);
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            listenForActiveKeys(); // Mulai mendengarkan data dari Firebase saat halaman dimuat
         };
     </script>
 </body>
