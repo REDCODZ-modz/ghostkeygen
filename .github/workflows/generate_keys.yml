@@ -26,7 +26,10 @@ jobs:
 
       # 4. Menjalankan skrip pembuat kunci
       - name: Run Key Generation Script
-        run: node generate-keys.js
+        # [[ PERBAIKAN PENTING ]]
+        # Menambahkan 'fromJSON' untuk memastikan secret dibaca sebagai JSON yang benar
         env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ toJson(secrets.FIREBASE_SERVICE_ACCOUNT) }}
+        run: node generate-keys.js
+
 
