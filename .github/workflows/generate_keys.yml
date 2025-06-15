@@ -25,15 +25,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # Menggunakan Node.js versi 18
+          node-version: '18'
 
-      # 3. Menginstal library Firebase Admin
-      - name: Install Firebase Admin SDK
-        run: npm install firebase-admin
+      # 3. Masuk ke direktori yang benar SEBELUM menginstal
+      - name: Change working directory
+        run: cd ghostkeygen
 
-      # 4. Menjalankan skrip pembuat kunci
+      # 4. Menginstal library Firebase Admin dari dalam direktori yang benar
+      #    Kita akan membuat file package.json sederhana agar ini bekerja
+      - name: Create package.json and Install Firebase Admin
+        working-directory: ./ghostkeygen
+        run: |
+          echo '{ "dependencies": { "firebase-admin": "^11.0.0" } }' > package.json
+          npm install
+
+      # 5. Menjalankan skrip pembuat kunci dari dalam direktori yang benar
       - name: Run Key Generation Script
-        # Menggunakan secret yang kita buat tadi sebagai environment variable
+        working-directory: ./ghostkeygen
         run: node generate-keys.js
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
