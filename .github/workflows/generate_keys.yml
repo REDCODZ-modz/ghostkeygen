@@ -1,0 +1,40 @@
+# Nama alur kerja Anda
+name: Daily Premium Key Generator
+
+on:
+  # Menjalankan alur kerja ini sesuai jadwal
+  schedule:
+    # Ini adalah jadwal cron "setiap hari pada jam 18:00 UTC"
+    # 18:00 UTC sama dengan jam 01:00 pagi WIB (GMT+7)
+    - cron: '0 18 * * *'
+  # Juga izinkan untuk dijalankan secara manual dari tab Actions
+  workflow_dispatch:
+
+jobs:
+  # Nama pekerjaan
+  generate-keys:
+    # Menjalankan di server Ubuntu terbaru yang disediakan GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Mengunduh kode dari repositori Anda
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Menyiapkan lingkungan Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Menggunakan Node.js versi 18
+
+      # 3. Menginstal library Firebase Admin
+      - name: Install Firebase Admin SDK
+        run: npm install firebase-admin
+
+      # 4. Menjalankan skrip pembuat kunci
+      - name: Run Key Generation Script
+        # Menggunakan secret yang kita buat tadi sebagai environment variable
+        run: node generate-keys.js
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
