@@ -1,19 +1,12 @@
-# Nama alur kerja Anda
 name: Daily Premium Key Generator
 
 on:
-  # Menjalankan alur kerja ini sesuai jadwal
   schedule:
-    # Ini adalah jadwal cron "setiap hari pada jam 18:00 UTC"
-    # 18:00 UTC sama dengan jam 01:00 pagi WIB (GMT+7)
     - cron: '0 18 * * *'
-  # Juga izinkan untuk dijalankan secara manual dari tab Actions
   workflow_dispatch:
 
 jobs:
-  # Nama pekerjaan
   generate-keys:
-    # Menjalankan di server Ubuntu terbaru yang disediakan GitHub
     runs-on: ubuntu-latest
 
     steps:
@@ -27,21 +20,12 @@ jobs:
         with:
           node-version: '18'
 
-      # 3. Masuk ke direktori yang benar SEBELUM menginstal
-      - name: Change working directory
-        run: cd ghostkeygen
+      # 3. Menginstal library Firebase Admin
+      - name: Install Firebase Admin SDK
+        run: npm install firebase-admin
 
-      # 4. Menginstal library Firebase Admin dari dalam direktori yang benar
-      #    Kita akan membuat file package.json sederhana agar ini bekerja
-      - name: Create package.json and Install Firebase Admin
-        working-directory: ./ghostkeygen
-        run: |
-          echo '{ "dependencies": { "firebase-admin": "^11.0.0" } }' > package.json
-          npm install
-
-      # 5. Menjalankan skrip pembuat kunci dari dalam direktori yang benar
+      # 4. Menjalankan skrip pembuat kunci
       - name: Run Key Generation Script
-        working-directory: ./ghostkeygen
         run: node generate-keys.js
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
