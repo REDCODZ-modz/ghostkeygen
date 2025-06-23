@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RC GHOST Keygen Terminal v5.0 (Firebase)</title>
+    <title>RC GHOST Keygen Terminal v5.2 (Username Edition)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,21 +47,22 @@
 
     <div class="container-wrapper">
         <div class="w-full max-w-4xl terminal-card rounded-lg p-6 flex flex-col">
-            <!-- HTML content remains the same -->
-             <div class="flex-grow">
+            <div class="flex-grow">
                 <div class="flex justify-center text-center mb-2"> <h1 class="glitch text-3xl md:text-4xl">RC GHOST KEYGEN</h1> </div>
-                <p class="text-center text-xs text-green-400 mb-2">[RC GHOST KEYGEN v5.0.0 Firebase Edition]</p>
+                <p class="text-center text-xs text-green-400 mb-2">[RC GHOST KEYGEN v5.2.0 Username Edition]</p>
                 <div id="datetime-container" class="text-center text-xs text-cyan-400 mb-4 font-mono"></div>
 
                 <div class="grid grid-cols-2 mb-4">
-                    <button id="tabBtnStandard" class="tab-btn border-t border-l border-r border-green-500 rounded-tl-lg" onclick="showTab('standard')">STANDARD</button>
+                    <button id="tabBtnStandard" class="tab-btn border-t border-l border-r border-green-500 rounded-tl-lg" onclick="showTab('standard')">STANDARD (FREE)</button>
                     <button id="tabBtnPremium" class="tab-btn border-t border-r border-green-500 rounded-tr-lg" onclick="showTab('premium')">PREMIUM</button>
                     <button id="tabBtnPremiumList" class="tab-btn border-t border-b border-l border-r border-green-500 rounded-bl-lg" onclick="showTab('premiumList')">PREMIUM LIST</button>
                     <button id="tabBtnUnban" class="tab-btn border-t border-b border-r border-green-500 rounded-br-lg" onclick="showTab('unban')">UNBAN</button>
                 </div>
                 
                 <div id="tabStandard" class="tab-content">
-                    <p class="text-center text-sm text-green-300 mb-4">:: Generate daily keys ::</p>
+                    <p class="text-center text-sm text-green-300 mb-2">:: Generate daily keys ::</p>
+                    <!-- DIUBAH: Menambahkan informasi username untuk kunci standar/gratis -->
+                    <p class="text-center text-xs text-cyan-400 mb-4">// Default username for these keys: GH-FREE</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <input type="text" id="std_secret" value="L1MB0O" class="terminal-input w-full rounded-md p-2" placeholder=":: SECRET_KEY">
                         <input type="text" id="std_prefix" value="RC_GH-" class="terminal-input w-full rounded-md p-2" placeholder=":: PREFIX">
@@ -75,6 +76,7 @@
                     <p class="text-center text-sm text-green-300 mb-4">:: Generate a single key with obfuscated expiry date ::</p>
                     <div class="space-y-4 mb-4">
                          <input type="text" id="prem_secret" value="L1MB0O" class="terminal-input w-full rounded-md p-2" placeholder=":: SECRET_KEY">
+                         <input type="text" id="prem_username" class="terminal-input w-full rounded-md p-2" placeholder=":: USERNAME_FOR_KEY">
                          <div>
                              <p class="text-center text-xs text-green-300 mb-2">:: SELECT EXPIRY DURATION ::</p>
                              <div class="flex justify-center gap-2 md:gap-4">
@@ -90,7 +92,7 @@
                 
                 <div id="tabPremiumList" class="tab-content">
                      <p class="text-center text-sm text-green-300 mb-4">:: Daftar Key Aktif (Realtime via Firebase) ::</p>
-                     <input type="text" id="search-key-input" class="terminal-input w-full rounded-md p-2 mb-4" placeholder=":: Search key..." onkeyup="displayActiveKeys()">
+                     <input type="text" id="search-key-input" class="terminal-input w-full rounded-md p-2 mb-4" placeholder=":: Search key or username..." onkeyup="displayActiveKeys()">
                      <div id="active-keys-container" class="space-y-2 h-80 overflow-y-auto pr-2"></div>
                 </div>
                 
@@ -107,7 +109,7 @@
                 </div>
             </div>
              <footer class="text-center text-xs text-gray-500 pt-6 mt-4 border-t border-gray-700">
-                &copy; 2024 RC GHOST. All Rights Reserved.
+                &copy; 2025 RC GHOST. All Rights Reserved.
             </footer>
         </div>
     </div>
@@ -192,16 +194,19 @@
             const button = document.getElementById('generate-prem-btn');
             button.disabled = true; button.textContent = '[ GENERATING... ]';
             const secret = document.getElementById('prem_secret').value;
+            const username = document.getElementById('prem_username').value.trim();
             const resultContainer = document.getElementById('result-container-prem');
             resultContainer.innerHTML = '';
-            if (!secret) { resultContainer.innerHTML = `<p class="text-red-500">>> ERROR: SECRET_KEY is null.</p>`; button.disabled = false; button.textContent = '[ GENERATE PREMIUM ]'; return; }
+
+            if (!secret || !username) {
+                resultContainer.innerHTML = `<p class="text-red-500">>> ERROR: SECRET_KEY and USERNAME cannot be empty.</p>`;
+                button.disabled = false; button.textContent = '[ GENERATE PREMIUM ]';
+                return;
+            }
             
-            // --- PERBAIKAN LOGIKA WAKTU ---
-            // Membuat tanggal kedaluwarsa menggunakan standar UTC untuk menghindari masalah timezone.
             const now = new Date();
             const expiryDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + selectedDuration));
-            expiryDate.setUTCHours(23, 59, 59, 999); // Set ke akhir hari UTC
-            // --- AKHIR PERBAIKAN ---
+            expiryDate.setUTCHours(23, 59, 59, 999);
 
             const day = String(expiryDate.getUTCDate()).padStart(2, '0');
             const month = String(expiryDate.getUTCMonth() + 1).padStart(2, '0');
@@ -212,7 +217,8 @@
 
             try {
                 const newKeyData = { 
-                    key: finalKey, 
+                    key: finalKey,
+                    username: username,
                     expiry: Timestamp.fromDate(expiryDate),
                     createdAt: Timestamp.now()
                 };
@@ -220,7 +226,7 @@
                 
                 const formattedExpiry = expiryDate.toLocaleDateString('id-ID', { timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
                 const { dateEl, keyEl, copyBtn } = createResultCard(resultContainer);
-                dateEl.innerHTML = `// Expires on: ${formattedExpiry} (UTC)`;
+                dateEl.innerHTML = `// User: ${username} | Expires on: ${formattedExpiry} (UTC)`;
                 copyBtn.onclick = () => copyToClipboard(finalKey, copyBtn);
                 await typeWriter(keyEl, finalKey);
 
@@ -235,28 +241,137 @@
             const searchTerm = document.getElementById('search-key-input').value.toUpperCase();
             const container = document.getElementById('active-keys-container');
             container.innerHTML = '';
-            const filteredKeys = allActiveKeys.filter(keyData => keyData.key.toUpperCase().includes(searchTerm));
+
+            const filteredKeys = allActiveKeys.filter(keyData =>
+                keyData.key.toUpperCase().includes(searchTerm) ||
+                (keyData.username && keyData.username.toUpperCase().includes(searchTerm))
+            );
+
             if (filteredKeys.length === 0) { container.innerHTML = `<p class="text-center text-gray-400">>> Tidak ada key aktif yang cocok.</p>`; return; }
             const now = new Date();
             filteredKeys.sort((a, b) => b.expiry.toDate() - a.expiry.toDate());
+            
             filteredKeys.forEach((keyData, index) => {
-                const expiryDate = keyData.expiry.toDate(); const diff = expiryDate.getTime() - now.getTime(); if (diff <= 0) return; const days = Math.floor(diff / (1000 * 60 * 60 * 24)); const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const expiryDate = keyData.expiry.toDate();
+                const diff = expiryDate.getTime() - now.getTime();
+                if (diff <= 0) return;
+                
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 let remainingStr = `${days}h ${hours}j ${minutes}m`;
-                const card = document.createElement('div'); card.className = 'key-card p-2 rounded-md flex items-center justify-between text-sm'; card.style.animationDelay = `${index * 0.1}s`;
-                const keyInfo = document.createElement('div'); const keyEl = document.createElement('p'); keyEl.className = 'text-base text-yellow-300 font-mono'; keyEl.textContent = keyData.key; const expiryEl = document.createElement('p'); expiryEl.className = 'text-xs text-green-300 font-mono'; expiryEl.textContent = `Sisa: ${remainingStr.trim()}`; keyInfo.appendChild(keyEl); keyInfo.appendChild(expiryEl);
-                const actions = document.createElement('div'); actions.className = 'flex gap-2'; const addButton = document.createElement('button'); addButton.className = 'terminal-button action-btn rounded-md'; addButton.textContent = '+DURASI'; addButton.onclick = () => showAddDurationModal(keyData.id, keyData.key); const banButton = document.createElement('button'); banButton.className = 'terminal-button banned-btn action-btn rounded-md'; banButton.textContent = 'BANNED'; banButton.onclick = () => banKey(keyData.id); actions.appendChild(addButton); actions.appendChild(banButton); card.appendChild(keyInfo); card.appendChild(actions); container.appendChild(card);
+
+                const card = document.createElement('div');
+                card.className = 'key-card p-2 rounded-md flex items-center justify-between text-sm';
+                card.style.animationDelay = `${index * 0.05}s`;
+
+                const keyInfo = document.createElement('div');
+                const keyEl = document.createElement('p');
+                keyEl.className = 'text-base text-yellow-300 font-mono';
+                keyEl.textContent = keyData.key;
+
+                const userEl = document.createElement('p');
+                userEl.className = 'text-xs text-cyan-400 font-mono';
+                userEl.textContent = `User: ${keyData.username || 'N/A'}`;
+
+                const expiryEl = document.createElement('p');
+                expiryEl.className = 'text-xs text-green-300 font-mono';
+                expiryEl.textContent = `Sisa: ${remainingStr.trim()}`;
+                
+                keyInfo.appendChild(keyEl);
+                keyInfo.appendChild(userEl);
+                keyInfo.appendChild(expiryEl);
+
+                const actions = document.createElement('div');
+                actions.className = 'flex gap-2';
+                const addButton = document.createElement('button');
+                addButton.className = 'terminal-button action-btn rounded-md';
+                addButton.textContent = '+DURASI';
+                addButton.onclick = () => showAddDurationModal(keyData.id, keyData.key);
+                const banButton = document.createElement('button');
+                banButton.className = 'terminal-button banned-btn action-btn rounded-md';
+                banButton.textContent = 'BANNED';
+                banButton.onclick = () => banKey(keyData.id);
+                
+                actions.appendChild(addButton);
+                actions.appendChild(banButton);
+                card.appendChild(keyInfo);
+                card.appendChild(actions);
+                container.appendChild(card);
             });
         }
         window.banKey = async function(docId) { if (confirm(`Apakah Anda yakin ingin menghapus key ini secara permanen?`)) { try { await deleteDoc(doc(db, 'premiumKeys', docId)); } catch (error) { console.error("Error deleting document: ", error); alert("Gagal menghapus key: " + error.message); } } }
         window.showAddDurationModal = function(docId, keyString) { keyToModify = { id: docId, key: keyString }; document.getElementById('modal-key-display').textContent = keyString; document.getElementById('duration-modal').style.display = 'flex'; }
         window.hideAddDurationModal = function() { document.getElementById('duration-modal').style.display = 'none'; document.getElementById('days-to-add').value = ''; keyToModify = { id: null, key: null }; }
-        window.confirmAddDuration = async function() { /* ... Logic not changed ... */ }
-        window.unbanKey = async function() { /* ... Logic not changed ... */ }
+        window.confirmAddDuration = async function() {
+          const daysToAdd = parseInt(document.getElementById('days-to-add').value);
+          if (isNaN(daysToAdd) || daysToAdd <= 0) {
+            alert("Masukkan jumlah hari yang valid.");
+            return;
+          }
+
+          const button = document.getElementById('confirm-duration-btn');
+          button.disabled = true;
+
+          try {
+            const keyDoc = allActiveKeys.find(k => k.id === keyToModify.id);
+            if (keyDoc) {
+              const currentExpiry = keyDoc.expiry.toDate();
+              const newExpiry = new Date(currentExpiry.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+              
+              await updateDoc(doc(db, 'premiumKeys', keyToModify.id), {
+                expiry: Timestamp.fromDate(newExpiry)
+              });
+              
+              hideAddDurationModal();
+            } else {
+              alert("Gagal menemukan key untuk diupdate.");
+            }
+          } catch (error) {
+            console.error("Error updating document: ", error);
+            alert("Gagal menambah durasi: " + error.message);
+          } finally {
+            button.disabled = false;
+          }
+        };
+        window.unbanKey = async function() {
+            const key = document.getElementById('unban-key').value;
+            const duration = parseInt(document.getElementById('unban-duration').value);
+            const resultContainer = document.getElementById('result-container-unban');
+            resultContainer.innerHTML = '';
+
+            if (!key || isNaN(duration) || duration <= 0) {
+                resultContainer.innerHTML = '<p class="text-red-500">>> ERROR: Masukkan key dan durasi yang valid.</p>';
+                return;
+            }
+
+            const now = new Date();
+            const expiryDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + duration));
+            expiryDate.setUTCHours(23, 59, 59, 999);
+
+            try {
+                await addDoc(keysCollection, {
+                    key: key,
+                    username: "Reactivated",
+                    expiry: Timestamp.fromDate(expiryDate),
+                    createdAt: Timestamp.now()
+                });
+                resultContainer.innerHTML = `<p class="text-green-500">>> SUCCESS: Key ${key} telah diaktifkan kembali selama ${duration} hari.</p>`;
+            } catch (error) {
+                resultContainer.innerHTML = `<p class="text-red-500">>> FIREBASE ERROR: ${error.message}</p>`;
+            }
+        };
         function listenForActiveKeys() {
-            const q = query(keysCollection, where("expiry", ">", Timestamp.now()));
+            const q = query(keysCollection);
             onSnapshot(q, (querySnapshot) => {
                 allActiveKeys = [];
-                querySnapshot.forEach((doc) => { allActiveKeys.push({ id: doc.id, ...doc.data() }); });
+                const now = new Date();
+                querySnapshot.forEach((doc) => {
+                  const data = doc.data();
+                  if (data.expiry.toDate() > now) {
+                    allActiveKeys.push({ id: doc.id, ...data });
+                  }
+                });
                 if (document.getElementById('tabPremiumList').classList.contains('active')) {
                     displayActiveKeys();
                 }
